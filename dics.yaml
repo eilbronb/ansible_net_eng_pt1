@@ -1,0 +1,22 @@
+---
+  - name: Interfaces's in Dicts
+    gather_facts: no
+    hosts: csr
+    tasks:
+      - name: Find Interfaces and Print them in Dict
+        vars:
+          credentials:
+            username: "{{ username }}"
+            password: "{{ password }}"
+            host: "{{ ansible_host }}"
+        ios_facts:
+          provider: "{{ credentials }}"
+        register: "IP_address_in_dict"
+      - name: Print Interfaces In Dict
+        debug:
+          msg: "{{ item }}"
+        with_dict: "{{ ansible_net_interfaces }}"
+      - name: Print a key inside a dictionary, in this case the name of the Interfaces
+        debug:
+          msg: "{{ item.key }}"
+        with_dict: "{{ ansible_net_interfaces }}"

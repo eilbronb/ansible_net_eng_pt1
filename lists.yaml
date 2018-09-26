@@ -1,0 +1,19 @@
+---
+  - name:
+    gather_facts: no
+    hosts: csr
+    tasks:
+      - name: Iterate through IP's
+        vars:
+          credentials:
+            username: "{{ username }}"
+            password: "{{ password }}"
+            host: "{{ ansible_host }}"
+        ios_facts:
+          provider: "{{ credentials }}"
+        register: "IP_addresses"
+
+      - name: Print IP Addresses
+        debug:
+          msg: "{{ item }}"
+        with_items: "{{ ansible_net_all_ipv4_addresses }}"

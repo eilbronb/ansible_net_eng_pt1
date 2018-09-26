@@ -1,0 +1,30 @@
+---
+  - name: IOS Conditional Fact Checker
+    gather_facts: no
+    hosts: csr
+    tasks:
+      - name: Gather IOS Facts
+        vars:
+          credentials:
+            username: "{{ username }}"
+            password: "{{ password }}"
+            host: "{{ ansible_host }}"
+        ios_facts:
+          provider: "{{ credentials }}"
+        register: "ios_facts_output"
+      - name: Print IOS Facts
+        debug:
+          msg: "{{ ios_facts_output }}"
+      - name: Print IOS Serial Number and Version and Hostname
+        debug:
+          msg: "SN: {{ ansible_net_serialnum }} , Version {{ ansible_net_version }}, Hostname: {{ ansible_net_hostname }}"
+      - name: Print Hostname only if it matches the serial Number
+        debug:
+          msg: "It's a match! , Hostname: {{ ansible_net_hostname }}"
+        when:
+          - "'9CZ8BT1W8EA' == ansible_net_serialnum "
+      - name: Print Hostnames if IOS Version is a match!
+        debug:
+          msg: "Here are the hostnames that have this IOS version: \n {{ ansible_net_hostname }}"
+        when:
+          - "'16.08.01a' == ansible_net_version"  
